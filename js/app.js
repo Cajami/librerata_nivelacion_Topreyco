@@ -87,7 +87,20 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
 
 
 $('#btnAgregar').on('click', function (event, data) {
-    console.log(data);
+    if(!data){
+        data={
+            hito:'',
+            ptoVisado : '',
+            vAtras : '',
+            vInt : '',
+            vAdel : '',
+            altInst : '',
+            cota : ''
+
+
+
+        }
+    }
     var hito = data.hito ? data.hito : '',
         ptoVisado = data.ptoVisado ? data.ptoVisado : '',
         vAtras = data.vAtras ? data.vAtras : '',
@@ -183,7 +196,7 @@ $('#btnCalcular').on('click', function () {
             cota: index == 0 ? $(elemento).find('td:eq(7) input').val().trim() : $(elemento).find('td:eq(7)').val().trim()
         });
     });
-
+    
     firebase.database().ref(emailLogin + '/libreta').set(saveData);
 });
 
