@@ -94,6 +94,15 @@
 
         <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
         <script>
+
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
+                $('*').css('font-size', '10px');
+                // Do something
+                // } else {
+                //     // Do something else
+            }
+
+
             $('#btnAgregar').on('click', function () {
                 $('#tablaLibreta').append('<tr>' +
                     '<td class="text-center"><i class="far fa-trash-alt text-danger eliminarRegistro"></i></td>' +
