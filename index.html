@@ -19,9 +19,46 @@
 
 <body>
 
-    <div class="container">
+    <div class="container mt-5 d-none" id="login">
+        <div class="row mt-4">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <img class="rounded-circle rounded mx-auto d-block" style="width: 100px;height: 100px;" src="https://scontent.flim20-1.fna.fbcdn.net/v/t31.0-8/21762463_931899693624213_8518441284340485909_o.jpg?_nc_cat=106&_nc_ht=scontent.flim20-1.fna&oh=43f1ac1c8962b6f131aa8783b3e27aca&oe=5CAAF90E">
+
+                        <div class="input-group mb-3 mt-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Email:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+                            </div>
+                            <input type="text" class="form-control" id="txtEmail">
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Password:</span>
+                            </div>
+                            <input type="password" class="form-control text-center" id="txtPassword">
+                        </div>
+
+
+                        <!-- <a href="#" class="card-link float-right">Ingresar</a> -->
+                        <button class="btn btn-link card-link float-right" id="btnIngresar">Ingresar</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-sm-3"></div>
+        </div>
+
+
+    </div>
+    <div class="container d-none" id="contenedorApp">
         <div class="row mt-4">
             <div class="col-sm-12 font-weight-bold text-center text-danger">
+                <button class="btn btn-link float-right" id="btnCerrarSesion">Cerrar Sesión</button>
                 <h2>LIBRETA DE NIVELACIÓN</h2>
             </div>
         </div>
@@ -92,171 +129,10 @@
 
         <iframe id="txtArea1" style="display:none"></iframe>
 
+        <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
         <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-        <script>
 
-            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
-                $('*').css('font-size', '10px');
-                $('#btnExportarExcel').remove();
-                // Do something
-                // } else {
-                //     // Do something else
-            }
-
-
-            $('#btnAgregar').on('click', function () {
-                $('#tablaLibreta').append('<tr>' +
-                    '<td class="text-center"><i class="far fa-trash-alt text-danger eliminarRegistro"></i></td>' +
-                    '<td>' +
-                    '<input type="text" class="form-control">' +
-                    '</td>' +
-                    '<td>' +
-                    '<input type="text" class="form-control">' +
-                    '</td>' +
-                    '<td>' +
-                    '<input type="text" class="form-control">' +
-                    '</td>' +
-                    '<td>' +
-                    '<input type="text" class="form-control">' +
-                    '</td>' +
-                    '<td>' +
-                    '<input type="text" class="form-control">' +
-                    '</td>' +
-                    '<td class="text-center">' +
-                    '</td>' +
-                    '<td class="text-center">' +
-                    '</td>' +
-                    '</tr>');
-            });
-
-            $('#btnCalcular').on('click', function () {
-                var ALT_INST = 'ALT-INST';
-                var hito, ptoVisado, vInt, vAdel;
-                var vAtras = 0;
-                var cota = 0;
-                var cota_anterior = 0;
-
-                $('#tablaLibreta tbody tr').each(function (index, elemento) {
-                    debugger;
-                    vAtras = $(elemento).find('td:eq(3) input').val().trim();
-
-                    if (vAtras.length == 0 || vAtras == 0) {
-                        //PRIMERO ALT_INST Y DESPUES COTA
-                        $(elemento).find('td:eq(6)').text(ALT_INST);
-
-                        if (index > 0) {
-                            vInt = $(elemento).find('td:eq(4) input').val().trim();
-                            if (vInt.length == 0 || vInt == 0) {
-                                vAdel = $(elemento).find('td:eq(5) input').val().trim();
-
-                                cota = parseFloat(ALT_INST) - parseFloat(vAdel);
-                            } else {
-                                cota = parseFloat(ALT_INST) - parseFloat(vInt);
-                            }
-                            cota = parseFloat(parseFloat(cota).toFixed(3));
-                        }
-
-                    } else {
-                        //PRIMERO COTA Y DESPUES ALT_INST
-
-                        if (index > 0) {
-                            vAdel = $(elemento).find('td:eq(5) input').val().trim();
-                            if (vAdel.length == 0 || vAdel == 0) {
-                                cota = parseFloat(cota_anterior);
-                            } else {
-                                cota = parseFloat(ALT_INST) - parseFloat(vAdel);
-                            }
-                        } else {
-                            cota = parseFloat($(elemento).find('td:eq(7) input').val().trim());
-                        }
-                        cota = parseFloat(parseFloat(cota).toFixed(3));
-
-                        ALT_INST = parseFloat(parseFloat(parseFloat(vAtras) + cota).toFixed(3));
-                        $(elemento).find('td:eq(6)').text(ALT_INST);
-                    }
-
-                    if (index > 0)
-                        $(elemento).find('td:eq(7)').text(cota);
-
-                    cota_anterior = cota;
-                });
-            });
-
-            $('#tablaLibreta tbody').on('click', 'i.eliminarRegistro', function () {
-                $(this).closest('tr').remove();
-            });
-
-            $('#btnLimpiar').on('click', function () {
-                var $tabla = $('#tablaLibreta tbody');
-                $tabla.find('tr:not(:first)').remove();
-                var $tr = $tabla.find('tr');
-                $tr.find('td:eq(1) input').val('');
-                $tr.find('td:eq(2) input').val('');
-                $tr.find('td:eq(3) input').val('');
-                $tr.find('td:eq(4) input').val('');
-                $tr.find('td:eq(5) input').val('');
-                $tr.find('td:eq(6)').text('');
-                $tr.find('td:eq(7) input').val('');
-            });
-
-            $('#btnExportarExcel').on('click', function () {
-                var dataExportar = '<table border="2px">' +
-                    '<tr>' +
-                    '<td bgcolor="#87AFC6">HITO</td>' +
-                    '<td bgcolor="#87AFC6">PTO-VISADO</td>' +
-                    '<td bgcolor="#87AFC6">V-ATRAS</td>' +
-                    '<td bgcolor="#87AFC6">V-INT</td>' +
-                    '<td bgcolor="#87AFC6">V-ADEL</td>' +
-                    '<td bgcolor="#87AFC6">ALT-INST</td>' +
-                    '<td bgcolor="#87AFC6">COTA</td>' +
-                    '</tr>';
-
-                var cota = '';
-
-                $('#tablaLibreta tbody tr').each(function (index, elemento) {
-
-                    if (index == 0)
-                        cota = $(elemento).find('td:eq(7) input').val().trim();
-                    else
-                        cota = $(elemento).find('td:eq(7)').val().trim();
-
-                    dataExportar += '<tr>' +
-                        '<td>' + $(elemento).find('td:eq(1) input').val().trim() + '</td>' +
-                        '<td>' + $(elemento).find('td:eq(2) input').val().trim() + '</td>' +
-                        '<td>' + $(elemento).find('td:eq(3) input').val().trim() + '</td>' +
-                        '<td>' + $(elemento).find('td:eq(4) input').val().trim() + '</td>' +
-                        '<td>' + $(elemento).find('td:eq(5) input').val().trim() + '</td>' +
-                        '<td>' + $(elemento).find('td:eq(5)').val().trim() + '</td>' +
-                        '<td>' + cota + '</td>' +
-                        '</tr>';
-                });
-                dataExportar += '</table>';
-                fnExcelReport(dataExportar);
-            });
-
-            function fnExcelReport(tab_text) {
-                tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
-                tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
-                tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
-
-                var ua = window.navigator.userAgent;
-                var msie = ua.indexOf("MSIE ");
-
-                if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
-                {
-                    txtArea1.document.open("txt/html", "replace");
-                    txtArea1.document.write(tab_text);
-                    txtArea1.document.close();
-                    txtArea1.focus();
-                    sa = txtArea1.document.execCommand("SaveAs", true, "Say Thanks to Sumit.xls");
-                }
-                else                 //other browser not tested on IE 11
-                    sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
-
-                return (sa);
-            }
-
-        </script>
+        <script src="js/app.js"></script>
 </body>
 
 </html>
