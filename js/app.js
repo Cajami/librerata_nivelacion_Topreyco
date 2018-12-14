@@ -14,7 +14,7 @@ firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         // User is signed in.
         emailLogin = user.email.split('@')[0];
-        
+
         $('#login').addClass('d-none');
         $('#txtEmail,#txtPassword').val('');
         $('#contenedorApp').removeClass('d-none');
@@ -37,6 +37,8 @@ function readData() {
     firebase.database().ref(emailLogin + '/libreta').once('value').then(function (snapshot) {
         var data = snapshot.val();
         var $tabla = $('#tablaLibreta tbody');
+
+        console.log(JSON.stringify(data,null,3));
 
         $.each(data, function (i, index) {
             if (i == 0) {
@@ -87,48 +89,46 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
 
 
 $('#btnAgregar').on('click', function (event, data) {
-    if(!data){
-        data={
-            hito:'',
-            ptoVisado : '',
-            vAtras : '',
-            vInt : '',
-            vAdel : '',
-            altInst : '',
-            cota : ''
-
-
-
+    if (!data) {
+        data = {
+            hito: '',
+            ptoVisado: '',
+            vAtras: '',
+            vInt: '',
+            vAdel: '',
+            altInst: '',
+            cota: ''
         }
     }
-    var hito = data.hito ? data.hito : '',
-        ptoVisado = data.ptoVisado ? data.ptoVisado : '',
-        vAtras = data.vAtras ? data.vAtras : '',
-        vInt = data.vInt ? data.vInt : '',
-        vAdel = data.vAdel ? data.vAdel : '',
-        altInst = data.altInst ? data.altInst : '',
-        cota = data.cota ? data.cota : '';
+
+    // var hito =  ? data.hito : '',
+    //     ptoVisado = data.ptoVisado ? data.ptoVisado : '',
+    //     vAtras = data.vAtras ? data.vAtras : '',
+    //     vInt = data.vInt ? data.vInt : '',
+    //     vAdel = data.vAdel ? data.vAdel : '',
+    //     altInst = data.altInst ? data.altInst : '',
+    //     cota = data.cota ? data.cota : '';
 
     $('#tablaLibreta').append('<tr>' +
         '<td class="text-center"><i class="far fa-trash-alt text-danger eliminarRegistro"></i></td>' +
         '<td>' +
-        '<input type="text" class="form-control" value="' + hito + '">' +
+        '<input type="text" class="form-control" value="' + data.hito + '">' +
         '</td>' +
         '<td>' +
-        '<input type="text" class="form-control" value="' + ptoVisado + '">' +
+        '<input type="text" class="form-control" value="' + data.ptoVisado + '">' +
         '</td>' +
         '<td>' +
-        '<input type="text" class="form-control" value="' + vAtras + '">' +
+        '<input type="text" class="form-control" value="' + data.vAtras + '">' +
         '</td>' +
         '<td>' +
-        '<input type="text" class="form-control" value="' + vInt + '">' +
+        '<input type="text" class="form-control" value="' + data.vInt + '">' +
         '</td>' +
         '<td>' +
-        '<input type="text" class="form-control" value="' + vAdel + '">' +
+        '<input type="text" class="form-control" value="' + data.vAdel + '">' +
         '</td>' +
-        '<td class="text-center">' + altInst +
+        '<td class="text-center">' + data.altInst +
         '</td>' +
-        '<td class="text-center">' + cota +
+        '<td class="text-center">' + data.cota +
         '</td>' +
         '</tr>');
 });
@@ -196,7 +196,7 @@ $('#btnCalcular').on('click', function () {
             cota: index == 0 ? $(elemento).find('td:eq(7) input').val().trim() : $(elemento).find('td:eq(7)').val().trim()
         });
     });
-    
+
     firebase.database().ref(emailLogin + '/libreta').set(saveData);
 });
 
